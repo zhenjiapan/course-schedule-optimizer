@@ -8,6 +8,26 @@ A Python and Streamlit application for planning CUHK-Shenzhen course schedules u
 
 Select courses, set preferences and unavailable times, then generate and compare recommended timetables. No local installation is required. The app uses a static course-data snapshot and does not enroll courses in SIS.
 
+## Screenshots
+
+### 1. Course selection and time preferences
+
+Select courses, review credit totals, and configure early-class preferences and unavailable weekdays.
+
+![Course selection and time preferences](docs/images/01-time-preferences.png)
+
+### 2. Instructor preferences
+
+Choose instructors for each course and rate preferences from 0 to 5.
+
+![Instructor selection and preference ratings](docs/images/02-instructor-preferences.png)
+
+### 3. Recommended schedules and independent validation
+
+Compare recommended plans, review validation results, and preview the weekly timetable.
+
+![Recommended plans, validation results, and weekly timetable](docs/images/03-recommended-timetable.png)
+
 ## Quick start
 
 Use Python 3.10 or later. Run these commands from the project root:
