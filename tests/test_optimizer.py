@@ -72,6 +72,26 @@ class Tests(unittest.TestCase):
         r=solve(cat,codes,Preferences(early=0,weekdays={5:0}),timeout=15)
         self.assertTrue(r.solutions,r)
         for sol in r.solutions:self.assertTrue(check(cat,codes,sol['selections'],Preferences(early=0,weekdays={5:0}))['passed'])
+    def test_full_database_default(self):
+        from model import DB
+        self.assertEqual(DB.name, 'term1_2026_2027.sqlite')
+        cat=load_catalog()
+        self.assertGreater(len(cat.courses), 34)
+        self.assertEqual(cat.required['CHI1000'], {'LEC'})
+        # Expanded subject requirements must use the same codes as sections.
+        self.assertEqual(cat.required['AIE8201'], {'THE'})
+        self.assertEqual(cat.required['AIR5050'], {'PRA'})
+
+    def test_unscheduled_sections_remain_unavailable(self):
+        cat=load_catalog()
+        # A thesis course is listed, but its unknown meeting times cannot be scheduled.
+        self.assertIn('AIE8201', cat.courses)
+        self.assertFalse(cat.sections['AIE8201'])
+        self.assertEqual(cat.required['AIE8201'], {'THE'})
+        self.assertTrue(any(w.startswith('AIE8201 ') for w in cat.warnings))
+        result=solve(cat, ['AIE1001','MAT1001','ENG1001','AIE8201'], Preferences())
+        self.assertEqual(result.status, 'infeasible')
+
     def test_duplicate_rooms_and_render(self):
         cat=load_catalog();s=next(s for s in cat.sections['AIE1901'] if s.code=='S01')
         self.assertEqual(len(s.meetings),1);self.assertEqual(len(s.meetings[0].rooms),2)

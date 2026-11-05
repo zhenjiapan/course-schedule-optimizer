@@ -52,7 +52,9 @@ python3 tests/test_ui.py
 
 ## Data
 
-`data/freshman_term1_2026_2027.sqlite` is the optimizer's default dataset. It contains the existing CHI1000 component correction. `data/term1_2026_2027.sqlite` is the full dataset used by `query_courses.py`. These datasets have different scopes and are not interchangeable without checking their schema and component requirements.
+`data/term1_2026_2027.sqlite` is the default dataset for the v2.0.1 app, optimizer, CLI, and course-query helper. The bundled full snapshot contains 387 courses. The earlier 34-course `data/freshman_term1_2026_2027.sqlite` is retained for reference.
+
+The adapter preserves the CHI1000 Lecture-only correction without modifying the source database. Sections with missing teaching dates or times are excluded from planning and reported as warnings; their course/component requirements remain in place. Courses with no usable section for a required component cannot be automatically scheduled.
 
 Database content is unchanged by this reorganization. Example outputs are preserved reference files, not newly generated results. The database guide and collection notes in `docs/` document the source history; executable paths now resolve relative to the source file.
 

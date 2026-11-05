@@ -1,6 +1,6 @@
 # Course Schedule Optimizer v2.0.1
 
-The application plans course schedules from the bundled semester snapshot. All sections participate regardless of enrollment availability. In the optimizer dataset, CHI1000 requires a Lecture only; its Tutorial requirement was removed following the original project confirmation.
+The application plans course schedules from the bundled semester snapshot. All sections participate regardless of enrollment availability. The adapter treats CHI1000 as Lecture-only, preserving the project correction without altering the original full database.
 
 ## Setup and launch
 
@@ -68,7 +68,7 @@ A course meeting twice per week counts twice per teaching week. Actual meeting d
 - A timeout with solutions returns the best plans found so far, without an optimality guarantee.
 - A timeout without solutions does not establish infeasibility.
 - Missing required components prevent automatic planning. The Python API has an explicit `allow_missing_components` override; the UI does not silently waive missing data.
-- Each run reads the database again. Replacement data must preserve the expected schema and the CHI1000 component correction. The optimizer uses `data/freshman_term1_2026_2027.sqlite`; full-dataset queries use `data/term1_2026_2027.sqlite`.
+- Each run reads the database again. Replacement data must preserve the expected schema and the CHI1000 component correction. The app, optimizer, CLI, and query helper use `data/term1_2026_2027.sqlite`. The former freshman-only file is retained for reference. Sections with incomplete meeting dates or times are excluded with warnings, while their component requirements remain in place.
 - The data does not provide Lecture/Tutorial bindings or personal prerequisite records. These rules cannot be verified. A generated plan does not enroll the user in SIS.
 - Adjacent meetings with the same end/start time do not conflict. There is no travel buffer or separate holiday, rescheduling, or exceptional teaching-week data; weekday and date intervals determine meetings.
 - Multiple rooms are displayed together with a warning; the app does not guess the correct room.
@@ -84,4 +84,4 @@ The originally reported environment was Python 3.13, Streamlit 1.66.1, and Panda
 
 Automatic and manual section selection share one timetable, validation report, and export area. Manual section choices show instructor names and meeting times. Details, scoring explanations, and data limitations are collapsed initially. Teaching weeks are limited to the selected sections' date range.
 
-The version retains the v2.0.0 optimizer, independent checker, and corrected optimizer database. Original regression checks additionally covered recommendation switching, persistent manual validation, missing components, stale results, blocked periods, infeasibility, and credit constraints. Original visual browser acceptance was not performed because the development environment could not bind a local server port.
+The version retains the v2.0.0 search objective and independent checker. The default data source now uses the full course snapshot; the adapter preserves the CHI1000 correction and handles unknown meeting times conservatively. Original regression checks additionally covered recommendation switching, persistent manual validation, missing components, stale results, blocked periods, infeasibility, and credit constraints. Original visual browser acceptance was not performed because the development environment could not bind a local server port.

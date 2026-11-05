@@ -4,8 +4,8 @@ from datetime import date, timedelta
 from pathlib import Path
 import sqlite3
 
-DB = Path(__file__).resolve().parent / 'data' / 'freshman_term1_2026_2027.sqlite'
-COMPONENTS = {'\u8bb2\u6f14':'LEC','\u6307\u5bfc\u6559\u5b66':'TUT','\u76d1\u7763':'SUP','\u5b9e\u9a8c':'LAB'}  # Original SIS component labels.
+DB = Path(__file__).resolve().parent / 'data' / 'term1_2026_2027.sqlite'
+COMPONENTS = {"\u8bb2\u6f14": "LEC", "\u6307\u5bfc\u6559\u5b66": "TUT", "\u76d1\u7763": "SUP", "\u5b9e\u9a8c": "LAB", "\u5b9e\u9a8c\u5ba4": "LAB", "\u5b9e\u4e60": "PRA", "\u8bba\u9898\u7814\u7a76": "THE", "\u7814\u8ba8\u4f1a": "SEM", "\u7814\u7a76": "RSC", "\u81ea\u4e3b\u5b66\u4e60": "IND"}  # Original SIS labels mapped to section codes.
 
 @dataclass(frozen=True)
 class Meeting:
@@ -71,9 +71,16 @@ def load_catalog(path=DB):
         terms={r[0] for r in con.execute('SELECT DISTINCT term FROM sections')}
         if len(terms)>1:
             raise ValueError('The database contains multiple semesters. Provide data for a single semester.')
+        # CHI1000 is Lecture-only; the full SIS snapshot retains a stale Tutorial requirement.
+        if 'CHI1000' in required:
+            required['CHI1000'].discard('TUT')
         for s in con.execute('SELECT * FROM sections ORDER BY course_code,section_code'):
             merged={}
+            incomplete=False
             for r in con.execute('SELECT m.*,d.weekday FROM meetings m JOIN meeting_days d ON d.meeting_id=m.id WHERE m.section_id=?',(s['id'],)):
+                if any(r[k] is None for k in ('start_time','end_time','start_date','end_date')):
+                    incomplete=True
+                    continue
                 try:
                     start,end=minutes(r['start_time']),minutes(r['end_time'])
                     first,last=date.fromisoformat(r['start_date']),date.fromisoformat(r['end_date'])
@@ -86,8 +93,9 @@ def load_catalog(path=DB):
                 if r['room']: roomset.add(r['room'])
                 teachset.update(teachers)
             meetings=tuple(Meeting(*key,tuple(sorted(rooms)),tuple(sorted(teachers))) for key,(rooms,teachers) in merged.items())
-            if not meetings or not any(list(dates(m)) for m in meetings):
-                raise ValueError(f"{s['course_code']} {s['section_code']} No valid meeting schedule")
+            if incomplete or not meetings or not any(list(dates(m)) for m in meetings):
+                warnings.append(f"{s['course_code']} {s['section_code']} Unavailable for planning: meeting dates or times are incomplete. Verify in SIS.")
+                continue
             teachers=tuple(sorted({t for m in meetings for t in m.teachers}))
             sections[s['course_code']].append(Section(s['course_code'],s['section_code'],s['component'],meetings,teachers))
             if any(len(m.rooms)>1 for m in meetings):
@@ -95,7 +103,11 @@ def load_catalog(path=DB):
         for code,items in sections.items():
             if len({s.code for s in items})!=len(items): raise ValueError(f'{code} Section code is not unique')
             offered={s.component for s in items}
-            if not required[code]: required[code]=offered
+            if not required[code]:
+                # Keep component requirements even when all their sections have unknown times.
+                required[code]={r[0] for r in con.execute(
+                    'SELECT DISTINCT component FROM sections WHERE course_code=?',(code,))}
+            if code=='CHI1000': required[code].discard('TUT')
             missing=required[code]-offered
             if missing: warnings.append(f'{code} Missing sections for required components: {", ".join(sorted(missing))}')
         return Catalog(courses,sections,required,warnings)
