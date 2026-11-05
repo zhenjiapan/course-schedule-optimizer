@@ -2,6 +2,12 @@
 
 A Python and Streamlit application for planning CUHK-Shenzhen course schedules under credit requirements, timetable constraints, and personal preferences. The current working version is **v2.0.1**.
 
+## Live demo
+
+**[Open Course Schedule Optimizer](https://course-schedule-optimizer-ovxp4wudvftnxqtoh6dnyn.streamlit.app)**
+
+Select courses, set preferences and unavailable times, then generate and compare recommended timetables. No local installation is required. The app uses a static course-data snapshot and does not enroll courses in SIS.
+
 ## Quick start
 
 Use Python 3.10 or later. Run these commands from the project root:
@@ -24,6 +30,18 @@ Run UI regression checks after installing the dependencies:
 ```bash
 python3 tests/test_ui.py
 ```
+
+## Cloud deployment
+
+The live app is deployed with Streamlit Community Cloud:
+
+| Setting | Value |
+| --- | --- |
+| Repository | `zhenjiapan/course-schedule-optimizer` |
+| Branch | `main` |
+| Main file path | `app.py` |
+| Dependencies | Root `requirements.txt` |
+| Course database | `data/term1_2026_2027.sqlite` |
 
 ## Features
 
@@ -63,6 +81,14 @@ Database content is unchanged by this reorganization. Example outputs are preser
 See [usage and scoring](docs/usage-and-model.md) for the objective, hard constraints, timeout behavior, and manual selection workflow, and [database guide](docs/database-guide.md) for source data details.
 
 An optimal status applies only to the supplied candidate data, constraints, and objective. Timed-out results are not certified optimal. The app does not register courses in the university enrollment system and cannot verify prerequisites or section bindings absent from the data.
+
+## Tests and version history
+
+[![Core tests](https://github.com/zhenjiapan/course-schedule-optimizer/actions/workflows/core-tests.yml/badge.svg)](https://github.com/zhenjiapan/course-schedule-optimizer/actions/workflows/core-tests.yml)
+
+GitHub Actions runs the core test suite on Python 3.10 and 3.13 for pushes and pull requests. The suite covers scoring against exhaustive enumeration, hard constraints, date-aware conflicts, the full database, and incomplete meeting records. It uses the Python standard library; UI regression checks require the application dependencies and run separately.
+
+See [CHANGELOG.md](CHANGELOG.md) for the v2.0.1 changes. The `VERSION` file identifies the working version; a published GitHub Release is a separate repository milestone.
 
 ## Historical versions
 

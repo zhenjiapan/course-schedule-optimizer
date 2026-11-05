@@ -218,3 +218,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Local macOS and editor files
+.DS_Store
+._*
+__MACOSX/
+.idea/
+
+# Generated CLI output
+result.json
