@@ -1,0 +1,178 @@
+{
+  "status": "optimal",
+  "solutions": [
+    {
+      "selections": [
+        [
+          "PED1113",
+          "L01"
+        ],
+        [
+          "AIE1001",
+          "L01"
+        ],
+        [
+          "AIE1001",
+          "T01"
+        ],
+        [
+          "AIE1901",
+          "S01"
+        ],
+        [
+          "MAT1001",
+          "L02"
+        ],
+        [
+          "CHI1000",
+          "L06"
+        ],
+        [
+          "MAT1001",
+          "T03"
+        ],
+        [
+          "ENG1001",
+          "L07"
+        ]
+      ],
+      "score": 95.0,
+      "breakdown": {
+        "Early classes": 90.0,
+        "Weekday": 100.0
+      },
+      "validation": {
+        "passed": true,
+        "errors": [],
+        "warnings": [
+          "The database does not provide Lecture/Tutorial section-binding rules and personal prerequisite records; These rules have not been verified.",
+          "AIE1901 S01 Multiple rooms are listed for the same period; Merged into a single meeting, Rooms are displayed together, Verify against the original schedule.",
+          "AIE1901 S04 Multiple rooms are listed for the same period; Merged into a single meeting, Rooms are displayed together, Verify against the original schedule."
+        ]
+      }
+    },
+    {
+      "selections": [
+        [
+          "PED1113",
+          "L01"
+        ],
+        [
+          "AIE1001",
+          "L01"
+        ],
+        [
+          "AIE1001",
+          "T01"
+        ],
+        [
+          "AIE1901",
+          "S01"
+        ],
+        [
+          "MAT1001",
+          "L02"
+        ],
+        [
+          "CHI1000",
+          "L06"
+        ],
+        [
+          "MAT1001",
+          "T03"
+        ],
+        [
+          "ENG1001",
+          "L08"
+        ]
+      ],
+      "score": 95.0,
+      "breakdown": {
+        "Early classes": 90.0,
+        "Weekday": 100.0
+      },
+      "validation": {
+        "passed": true,
+        "errors": [],
+        "warnings": [
+          "The database does not provide Lecture/Tutorial section-binding rules and personal prerequisite records; These rules have not been verified.",
+          "AIE1901 S01 Multiple rooms are listed for the same period; Merged into a single meeting, Rooms are displayed together, Verify against the original schedule.",
+          "AIE1901 S04 Multiple rooms are listed for the same period; Merged into a single meeting, Rooms are displayed together, Verify against the original schedule."
+        ]
+      }
+    },
+    {
+      "selections": [
+        [
+          "PED1113",
+          "L01"
+        ],
+        [
+          "AIE1001",
+          "L01"
+        ],
+        [
+          "AIE1001",
+          "T01"
+        ],
+        [
+          "AIE1901",
+          "S01"
+        ],
+        [
+          "MAT1001",
+          "L02"
+        ],
+        [
+          "CHI1000",
+          "L06"
+        ],
+        [
+          "MAT1001",
+          "T03"
+        ],
+        [
+          "ENG1001",
+          "L15"
+        ]
+      ],
+      "score": 95.0,
+      "breakdown": {
+        "Early classes": 90.0,
+        "Weekday": 100.0
+      },
+      "validation": {
+        "passed": true,
+        "errors": [],
+        "warnings": [
+          "The database does not provide Lecture/Tutorial section-binding rules and personal prerequisite records; These rules have not been verified.",
+          "AIE1901 S01 Multiple rooms are listed for the same period; Merged into a single meeting, Rooms are displayed together, Verify against the original schedule.",
+          "AIE1901 S04 Multiple rooms are listed for the same period; Merged into a single meeting, Rooms are displayed together, Verify against the original schedule."
+        ]
+      }
+    }
+  ],
+  "errors": [],
+  "nodes": 103,
+  "elapsed": 0.0032938340009422973,
+  "courses": [
+    "AIE1001",
+    "AIE1901",
+    "MAT1001",
+    "ENG1001",
+    "CHI1000",
+    "PED1113"
+  ],
+  "preferences": {
+    "early": 0,
+    "weekdays": {
+      "5": 0
+    },
+    "teachers": {},
+    "ban_early": false,
+    "banned_days": [],
+    "blocked": [],
+    "allow_missing_components": false
+  },
+  "database_sha256": "25cf8f638d018d6f3d7e2df5f98dc514d7bfb615a456d047d6a19254e24c28ea"
+}
