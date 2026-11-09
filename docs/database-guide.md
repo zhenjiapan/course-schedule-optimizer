@@ -142,6 +142,13 @@ Added 87 courses, 232 sections, 245 raw meetings, and 337 weekday associations t
 
 All 87 saved E-prefix course archives were represented with all target-term sections and meetings. Every section belonged to `2026-27 Term 1`; integrity returned `ok` and foreign-key checks passed. Availability status and Lecture/Tutorial bindings were not inferred. The original database was unchanged. F-prefix collection remained incomplete.
 
+
+### November 8–9, 2026: F- and G-prefix completion
+
+Checked all catalog codes at all course levels for FEMBA, FEX, FIN, FMA, FREN, FRN, FTE, GBI, GEA, GEB, GEC, GED, GER, GERM, GEW, GFH, GFN, GGE, GLB, and GNB. For each target-term offering, the SIS route was Browse Course Catalog → Subject → Course Details → View Class Sections → 2026–27 Term 1 → View Sections → View All. Unscheduled courses and those without the target term were excluded. Earlier statements that F or G remained unchecked describe historical checkpoints.
+
+F-prefix totals: 47 courses, 101 sections, and 105 meetings (FEX 11 courses, FIN 35, FRN 1). G-prefix totals: 64 courses, 249 sections, and 252 meetings (GEA 1, GEB 9, GEC 15, GED 13, GEW 2, GFH 1, GFN 1, GGE 2, GLB 20). GBI, GER, GERM, and GNB had no confirmed target-term offerings. The completed database has **489 courses, 1,468 sections, 1,509 raw meetings, and 1,834 weekday associations**. All stored sections belong to `2026-27 Term 1`; SQLite integrity and foreign-key checks passed. The database excludes enrollment availability and does not infer Lecture/Tutorial bindings.
+
 ## Language and data preservation
 
 Documentation, interface labels, comments, and export headers are in English. Chinese course names are preserved. Raw SIS data, including original source fields, is retained without translation to preserve provenance and database compatibility. Source enum matching remains exact.

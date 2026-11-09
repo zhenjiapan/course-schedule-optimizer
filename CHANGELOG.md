@@ -1,5 +1,11 @@
 # Changelog
 
+## Data refresh — November 9, 2026
+
+- Replaced the default 2026–27 Term 1 database with the completed A–G SIS snapshot: 489 courses, 1,468 sections, 1,509 meetings, and 1,834 weekday associations.
+- Finished checking all F- and G-prefix subjects at every course level using the SIS course catalog and full section view. Courses without target-term sections were excluded.
+- Preserved the schema, original course details, and the earlier 34-course reference database. SQLite integrity and foreign-key checks passed. Enrollment availability and Lecture/Tutorial bindings are not stored.
+
 ## v2.0.1
 
 ### Features
@@ -10,7 +16,7 @@
 
 ### Data compatibility
 
-- The app, CLI, optimizer, and query helper use the full `term1_2026_2027.sqlite` snapshot containing 387 courses.
+- The app, CLI, optimizer, and query helper use the full `term1_2026_2027.sqlite` snapshot containing 387 courses at the v2.0.1 checkpoint (now refreshed to 489 courses).
 - The read-only adapter preserves the CHI1000 Lecture-only correction without editing the database.
 - Expanded SIS component labels map to matching section codes.
 - Sections with incomplete meeting dates or times are excluded with warnings; required components remain enforced.
