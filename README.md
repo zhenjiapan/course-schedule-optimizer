@@ -90,11 +90,11 @@ The live app is deployed with Streamlit Community Cloud:
 
 ## Data
 
-`data/term1_2026_2027.sqlite` is the default dataset for the v2.0.1 app, optimizer, CLI, and course-query helper. The bundled full snapshot contains 489 courses, 1,468 sections, and 1,509 meeting records (A–G checked). The earlier 34-course `data/freshman_term1_2026_2027.sqlite` is retained for reference.
+`data/term1_2026_2027.sqlite` is the default dataset for the v2.0.1 app, optimizer, CLI, and course-query helper. The bundled full snapshot contains 493 courses, 1,476 sections, and 1,517 meeting records (A–H checked). The earlier 34-course `data/freshman_term1_2026_2027.sqlite` is retained for reference.
 
 The adapter preserves the CHI1000 Lecture-only correction without modifying the source database. Sections with missing teaching dates or times are excluded from planning and reported as warnings; their course/component requirements remain in place. Courses with no usable section for a required component cannot be automatically scheduled.
 
-The November 9, 2026 database refresh adds the completed F- and G-prefix SIS collections. Application code and historical snapshots are unchanged. Example outputs are preserved reference files, not newly generated results. The database guide and collection notes in `docs/` document the source history; executable paths now resolve relative to the source file.
+The November 9, 2026 database refresh adds the completed F-, G-, and H-prefix SIS collections. Application code and historical snapshots are unchanged. Example outputs are preserved reference files, not newly generated results. The database guide and collection notes in `docs/` document the source history; executable paths now resolve relative to the source file.
 
 ## Model and limitations
 

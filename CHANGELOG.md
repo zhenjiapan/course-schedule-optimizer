@@ -1,5 +1,10 @@
 # Changelog
 
+## H-prefix data refresh — November 9, 2026
+
+- Checked all HKSL, HSS, and HST catalog codes in SIS. Added HSS1004, HSS1006, HSS1010, and HSS1011 with all eight target-term sections and meetings. HKSL had no target-term offering and HST entries were unscheduled.
+- Default database now contains 493 courses, 1,476 sections, 1,517 meetings, and 1,846 weekday associations. Integrity and foreign-key checks passed.
+
 ## Data refresh — November 9, 2026
 
 - Replaced the default 2026–27 Term 1 database with the completed A–G SIS snapshot: 489 courses, 1,468 sections, 1,509 meetings, and 1,834 weekday associations.

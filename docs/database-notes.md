@@ -14,4 +14,6 @@ This Markdown file replaces the original RTF notes. See [database guide](databas
 | 2026-11-01, E complete | Added 87 courses, 232 sections, 245 meetings, and 337 weekday associations to a copy. Totals: 378 courses, 1,118 sections, 1,152 meetings, and 1,480 weekday associations. E-prefix totals: 89 courses (ECE 16, ECO 35, ENB 6, ENE 13, ENG 7, EPB 6, ERG 6), including existing ECO2011 and ENG1001. All 87 saved E-prefix course archives were represented. Integrity and foreign-key checks passed. F remained unchecked. |
 | 2026-11-08 to 2026-11-09, F/G complete | Checked all F- and G-prefix catalog subjects and all levels through the full SIS section view. F: 47 courses, 101 sections, 105 meetings. G: 64 courses, 249 sections, 252 meetings. Final snapshot: 489 courses, 1,468 sections, 1,509 meetings, 1,834 weekday associations. Integrity and foreign-key checks passed. |
 
+| 2026-11-09, H complete | Checked HKSL, HSS and HST. Added HSS1004, HSS1006, HSS1010 and HSS1011: 4 courses, 8 sections, 8 meetings, 12 weekday associations. Final A–H snapshot: 493 courses, 1,476 sections, 1,517 meetings, 1,846 weekday associations. Integrity and foreign-key checks passed. |
+
 Only confirmed target-term offerings were imported. The data is a collection-time snapshot; it does not include live enrollment availability or inferred section bindings.

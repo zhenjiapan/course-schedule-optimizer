@@ -149,6 +149,10 @@ Checked all catalog codes at all course levels for FEMBA, FEX, FIN, FMA, FREN, F
 
 F-prefix totals: 47 courses, 101 sections, and 105 meetings (FEX 11 courses, FIN 35, FRN 1). G-prefix totals: 64 courses, 249 sections, and 252 meetings (GEA 1, GEB 9, GEC 15, GED 13, GEW 2, GFH 1, GFN 1, GGE 2, GLB 20). GBI, GER, GERM, and GNB had no confirmed target-term offerings. The completed database has **489 courses, 1,468 sections, 1,509 raw meetings, and 1,834 weekday associations**. All stored sections belong to `2026-27 Term 1`; SQLite integrity and foreign-key checks passed. The database excludes enrollment availability and does not infer Lecture/Tutorial bindings.
 
+### November 9, 2026: H-prefix completion
+
+Checked HKSL, HSS, and HST at every catalog level using the SIS course-detail and full section view. Both HSS1002 catalog entries were checked. HKSL had no confirmed target-term sections and HST entries were unscheduled. Added HSS1004 (3 sections), HSS1006 (1), HSS1010 (1), and HSS1011 (3): four courses, eight sections, eight meetings, and twelve weekday associations. The A–H snapshot now has **493 courses, 1,476 sections, 1,517 meetings, and 1,846 weekday associations**. All sections belong to `2026-27 Term 1`; integrity and foreign-key checks passed. Enrollment availability and Lecture/Tutorial bindings are absent.
+
 ## Language and data preservation
 
 Documentation, interface labels, comments, and export headers are in English. Chinese course names are preserved. Raw SIS data, including original source fields, is retained without translation to preserve provenance and database compatibility. Source enum matching remains exact.
