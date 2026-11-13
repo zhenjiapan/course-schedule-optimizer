@@ -15,7 +15,7 @@ python3 -m streamlit run app.py
 
 ## Workflow
 
-1. Select courses in the sidebar. Every selected course must be scheduled, and the total must be 12–18 credits.
+1. Select courses in the sidebar. Every selected course must be scheduled, and the total must be at least 12 credits. The planner does not impose a maximum; actual enrollment limits remain subject to university rules.
 2. Set time and instructor preferences. Classes starting at 08:30 can be neutral, avoided, preferred, or prohibited. Add recurring blocked periods in the editable table.
 3. Generate recommendations and compare up to three plans in one timetable area.
 4. Load a recommendation into manual editing, or start selecting sections manually. Each change is validated. Turning manual editing off returns to the recommendations without discarding manual selections.

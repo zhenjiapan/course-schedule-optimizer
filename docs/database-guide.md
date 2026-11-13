@@ -168,3 +168,7 @@ The combined database has **494 courses, 1,564 sections, 1,605 meetings, and 1,9
 ## November 13, 2026: Further Term 2 courses and semester selection
 
 Checked the SIS course detail and full section view for MAT1002, STA2001, ENG1002, PED1214, and AIE1901. Added MAT1002 (50 sections), STA2001 (10), ENG1002 (62), and PED1214 (3), including every displayed meeting, weekday, room, date span, and instructor placeholder. AIE1901 offered no 2026–27 Term 2 selection in SIS and has no Term 2 sections in this database. The combined database now contains **498 courses, 1,689 sections, 1,730 meetings, and 2,144 weekday associations**; 1,476 sections belong to Term 1 and 213 to Term 2. The app and CLI now accept a semester selection. This is a copy; the source repository was not changed. Section availability and Lecture/Tutorial bindings were not inferred.
+
+## v3.0.1 update — November 13, 2026
+
+SIS full-section view added AIE1902 to 2026-27 Term 2: 11 supervision sections and 12 meeting records (S07 lists two rooms). Current snapshot totals: 499 courses, 1,700 sections, 1,742 meeting records, including 224 Term 2 sections. Availability status is not stored.

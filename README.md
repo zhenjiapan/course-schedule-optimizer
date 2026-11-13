@@ -1,6 +1,6 @@
 # Course Schedule Optimizer
 
-A Python and Streamlit application for planning CUHK-Shenzhen course schedules under credit requirements, timetable constraints, and personal preferences. The current working version is **v3.0.0**.
+A Python and Streamlit application for planning CUHK-Shenzhen course schedules under credit requirements, timetable constraints, and personal preferences. The current working version is **v3.0.1**.
 
 ## Live demo
 
@@ -8,7 +8,7 @@ A Python and Streamlit application for planning CUHK-Shenzhen course schedules u
 
 Select courses, set preferences and unavailable times, then generate and compare recommended timetables. No local installation is required. The app uses a static course-data snapshot and does not enroll courses in SIS.
 
-Choose **2026-27 Term 1** or **2026-27 Term 2** in the sidebar before selecting courses. The public demo may still run an older version until v3.0.0 is deployed.
+Choose **2026-27 Term 1** or **2026-27 Term 2** in the sidebar before selecting courses. The public demo may still run an older version until v3.0.1 is deployed.
 
 ## Screenshots
 
@@ -92,7 +92,7 @@ The live app is deployed with Streamlit Community Cloud:
 
 ## Data
 
-`data/term1_2026_2027.sqlite` is a multi-term dataset despite its historical filename. This copy contains 498 courses, 1,689 sections, and 1,730 meeting records: 1,476 sections belong to Term 1 and 213 verified sections belong to Term 2. The app offers a semester selector; the CLI defaults to Term 1 for compatibility. Add `"term": "2026-27 Term 2"` to a CLI request to plan Term 2. `load_catalog(term="2026-27 Term 2")` and `get_schedule(code, term="2026-27 Term 2")` also support direct queries. AIE1901 has no Term 2 offering in the SIS catalog at the time of verification.
+`data/term1_2026_2027.sqlite` is a multi-term dataset despite its historical filename. This copy contains 499 courses, 1,700 sections, and 1,742 meeting records: 1,476 sections belong to Term 1 and 224 verified sections belong to Term 2. The app offers a semester selector; the CLI defaults to Term 1 for compatibility. Add `"term": "2026-27 Term 2"` to a CLI request to plan Term 2. `load_catalog(term="2026-27 Term 2")` and `get_schedule(code, term="2026-27 Term 2")` also support direct queries. AIE1901 has no Term 2 offering in the SIS catalog at the time of verification.
 
 The adapter preserves the CHI1000 Lecture-only correction without modifying the source database. Sections with missing teaching dates or times are excluded from planning and reported as warnings; their course/component requirements remain in place. Courses with no usable section for a required component cannot be automatically scheduled.
 
@@ -110,7 +110,7 @@ An optimal status applies only to the supplied candidate data, constraints, and 
 
 GitHub Actions runs the core test suite on Python 3.10 and 3.13 for pushes and pull requests. The suite covers scoring against exhaustive enumeration, hard constraints, date-aware conflicts, the full database, and incomplete meeting records. It uses the Python standard library; UI regression checks require the application dependencies and run separately.
 
-See [CHANGELOG.md](CHANGELOG.md) for the v3.0.0 changes. The `VERSION` file identifies the working version; a published GitHub Release is a separate repository milestone.
+See [CHANGELOG.md](CHANGELOG.md) for the v3.0.1 changes. The `VERSION` file identifies the working version; a published GitHub Release is a separate repository milestone.
 
 ## Historical versions
 
@@ -125,3 +125,7 @@ Documentation and interface text are in English. Original Chinese course names a
 ## 2026–27 Term 2 verification copy
 
 On November 13, 2026, the SIS full-section view was checked for CSC3001, DDA2001, CSC3200, PHY1001, GFN1000, CEC2000, MAT1002, STA2001, ENG1002, and PED1214. Their 213 Term 2 sections and meetings were added to v3.0.0. AIE1901 had no Term 2 option in SIS. The updated guide is `docs/大一下选课指南_更新版.pdf`. The database filename is historical; query the `term` field to distinguish semesters. No enrollment status or Lecture/Tutorial binding was inferred. See `docs/database-guide.md` for counts and scope.
+
+## v3.0.1 update
+
+SIS verification added AIE1902 with 11 Term 2 supervision sections and 12 meeting records. The scheduler requires at least 12 credits and imposes no program maximum; university enrollment rules still apply.

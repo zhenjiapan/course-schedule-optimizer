@@ -31,15 +31,13 @@ with st.sidebar:
     codes = st.multiselect('Select courses to take', sorted(cat.courses),
         format_func=lambda c: f"{c} · {cat.courses[c]['name']}", key=f'courses_{term}')
     credits = sum(cat.courses[c]['credits'] for c in codes)
-    st.metric('Selected credits', f'{credits:g}', help='Every selected course must be scheduled. Total credits must be between 12 and 18.')
+    st.metric('Selected credits', f'{credits:g}', help='Every selected course must be scheduled. Total credits must be at least 12; the planner has no maximum.')
     if not codes:
         st.info('Select courses first. Start with your required courses.')
     elif credits < 12:
         st.warning(f'You need at least {12-credits:g} more credits.')
-    elif credits > 18:
-        st.warning(f'You are {credits-18:g} credits above the limit. Remove some courses.')
     else:
-        st.caption(f'Selected {len(codes)} courses · Within the 12–18 credit range')
+        st.caption(f'Selected {len(codes)} courses · Minimum 12 credits met')
     with st.expander('Search settings and instructions'):
         timeout = st.number_input('Maximum search time (seconds)', 1, 120, 15, key='timeout')
         st.caption('If the search times out, increase the time limit and retry.Scores compare recommendations under the same settings only.')
@@ -102,7 +100,7 @@ with st.expander('Scheduling preferences and unavailable times', expanded=True):
 p = Preferences(early, weekdays, teachers, ban_early, tuple(banned), tuple(blocked))
 db_hash = hashlib.sha256(DB.read_bytes()).hexdigest()
 signature = hashlib.sha256((db_hash+json.dumps([term, codes, asdict(p)], sort_keys=True)).encode()).hexdigest()
-ready = bool(codes) and 12 <= credits <= 18 and not bad_block
+ready = bool(codes) and credits >= 12 and not bad_block
 
 
 def seed_manual(selections):
@@ -223,4 +221,4 @@ if selections is not None and report is not None:
         for warning in report['warnings']:
             st.warning(warning)
 elif not saved:
-    st.info('Select 12–18 credits, then click “Generate recommendations”, or enable manual section editing.')
+    st.info('Select at least 12 credits, then click “Generate recommendations”, or enable manual section editing.')

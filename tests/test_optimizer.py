@@ -51,6 +51,10 @@ class Tests(unittest.TestCase):
         self.assertEqual(solve(fixture(),list('ABCD'),Preferences(),timeout=0).status,'timeout_no_solution')
     def test_credit(self):
         self.assertEqual(solve(fixture(),['A'],Preferences()).status,'invalid')
+        cat=fixture();cat.courses['A']['credits']=12
+        result=solve(cat,list('ABCD'),Preferences())
+        self.assertEqual(result.status,'optimal')
+        self.assertTrue(check(cat,list('ABCD'),result.solutions[0]['selections'],Preferences())['passed'])
     def test_unknown_teacher(self):
         self.assertEqual(solve(fixture(),list('ABCD'),Preferences(teachers={'A':{'Wrong':5}})).status,'invalid')
     def test_dates_and_adjacency(self):
@@ -81,6 +85,15 @@ class Tests(unittest.TestCase):
         # Expanded subject requirements must use the same codes as sections.
         self.assertEqual(cat.required['AIE8201'], {'THE'})
         self.assertEqual(cat.required['AIR5050'], {'PRA'})
+
+    def test_aie1902_term2(self):
+        cat=load_catalog(term='2026-27 Term 2')
+        self.assertIn('AIE1902',cat.courses)
+        self.assertEqual(cat.required['AIE1902'],{'SUP'})
+        self.assertEqual(len(cat.sections['AIE1902']),11)
+        s07=next(s for s in cat.sections['AIE1902'] if s.code=='S07')
+        self.assertEqual(len(s07.meetings),1)
+        self.assertEqual(len(s07.meetings[0].rooms),2)
 
     def test_unscheduled_sections_remain_unavailable(self):
         cat=load_catalog()

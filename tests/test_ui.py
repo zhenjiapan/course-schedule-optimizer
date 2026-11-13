@@ -43,6 +43,6 @@ at.selectbox(key='semester').set_value('2026-27 Term 2').run()
 assert not at.exception
 term2_codes = at.multiselect(key='courses_2026-27 Term 2').options
 assert all(any(option.startswith(code + ' · ') for option in term2_codes)
-           for code in ('MAT1002', 'STA2001', 'ENG1002', 'PED1214'))
+           for code in ('MAT1002', 'STA2001', 'AIE1902', 'ENG1002', 'PED1214'))
 assert not any(option.startswith('AIE1901 · ') for option in term2_codes)
 print('PASS: generate, one preview, manual persistence, missing component, switch solution, stale, infeasible, credits')

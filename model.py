@@ -121,7 +121,7 @@ def validate_request(cat,codes,p):
         if code not in cat.courses: errors.append(f'Unknown course: {code}')
     if errors: return errors
     credits=sum(float(cat.courses[c]['credits']) for c in codes)
-    if not 12<=credits<=18: errors.append(f'Total credits {credits:g}, must be between 12 and 18.')
+    if credits < 12: errors.append(f'Total credits {credits:g}, must be at least 12.')
     values=([p.early] if p.early is not None else [])+list(p.weekdays.values())
     for code,ratings in p.teachers.items():
         if code not in codes: errors.append(f'Instructor preferences refer to an unselected course: {code}')

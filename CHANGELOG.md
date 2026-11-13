@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.0.1 — November 13, 2026
+
+- Added SIS-verified AIE1902 to 2026-27 Term 2: 11 supervision sections and 12 meeting records, including both rooms listed for S07.
+- Removed the application’s 18-credit maximum from the interface and schedule validation. The 12-credit minimum remains; university enrollment limits are separate.
+- Updated the database snapshot to 499 courses, 1,700 sections, and 1,742 meeting records (224 Term 2 sections).
+
 ## v3.0.0 — November 13, 2026
 
 - Archived the previous working version and its databases in `archive/v2.0.1/`.
