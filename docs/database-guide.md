@@ -85,7 +85,7 @@ With Pandas installed, use `pd.read_sql_query('SELECT * FROM schedule', conn)` f
 | `sources` | Collection timestamps, sources, raw course fields, page-archive checksums, and page section totals |
 | `schedule` | Convenient course, section, and meeting query view |
 | `course_summary` | Course details and section counts |
-| `collection_runs` | Verification date, term, and scope for the six added Term 2 courses |
+| `collection_runs` | Verification date, term, and scope for the ten added Term 2 courses |
 
 Times use 24-hour `HH:MM`; dates use `YYYY-MM-DD`, interpreted in Asia/Shanghai. Original source values are retained in `_raw` fields. TBA-only entries have NULL normalized times or dates while retaining the source text. Optional fields absent from SIS remain NULL; missing requirements are never invented.
 
@@ -164,3 +164,7 @@ Documentation, interface labels, comments, and export headers are in English. Ch
 The SIS Browse Course Catalog route was used for six courses in the updated spring guide: Course Details → 2026–27 Term 2 → Show Sections → View All. Every displayed section and meeting line was checked. The database copy adds CSC3001 (3 sections), DDA2001 (11), CSC3200 (4), PHY1001 (16), GFN1000 (42), and CEC2000 (12): **88 sections, 88 meetings, 98 weekday associations**. DDA2001 was a new course row; the other five already had Term 1 records. The SIS instructor field showed `员工` for the new section listings; it remains a placeholder rather than a named teacher.
 
 The combined database has **494 courses, 1,564 sections, 1,605 meetings, and 1,944 weekday associations**. Of its sections, 1,476 are Term 1 and 88 are Term 2. The database filename `term1_2026_2027.sqlite` is historical; always filter on `sections.term` or `schedule.term` for cross-term analysis. The app and CLI load Term 1 by default so their existing planning results do not mix semesters. Python can load the six-course Term 2 catalog with `load_catalog(term="2026-27 Term 2")`. The `sources` table still describes the original course-page collection; `collection_runs` records this later Term 2 verification. DDA2001 course description is a concise summary of the SIS content, not a verbatim transcript. This snapshot does not imply a personal enrollment, section availability, or a Lecture/Tutorial binding. SQLite integrity and foreign-key checks passed. The original repository was left untouched.
+
+## November 13, 2026: Further Term 2 courses and semester selection
+
+Checked the SIS course detail and full section view for MAT1002, STA2001, ENG1002, PED1214, and AIE1901. Added MAT1002 (50 sections), STA2001 (10), ENG1002 (62), and PED1214 (3), including every displayed meeting, weekday, room, date span, and instructor placeholder. AIE1901 offered no 2026–27 Term 2 selection in SIS and has no Term 2 sections in this database. The combined database now contains **498 courses, 1,689 sections, 1,730 meetings, and 2,144 weekday associations**; 1,476 sections belong to Term 1 and 213 to Term 2. The app and CLI now accept a semester selection. This is a copy; the source repository was not changed. Section availability and Lecture/Tutorial bindings were not inferred.

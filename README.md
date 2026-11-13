@@ -1,12 +1,14 @@
 # Course Schedule Optimizer
 
-A Python and Streamlit application for planning CUHK-Shenzhen course schedules under credit requirements, timetable constraints, and personal preferences. The current working version is **v2.0.1**.
+A Python and Streamlit application for planning CUHK-Shenzhen course schedules under credit requirements, timetable constraints, and personal preferences. The current working version is **v3.0.0**.
 
 ## Live demo
 
 **[Open Course Schedule Optimizer](https://course-schedule-optimizer-ovxp4wudvftnxqtoh6dnyn.streamlit.app)**
 
 Select courses, set preferences and unavailable times, then generate and compare recommended timetables. No local installation is required. The app uses a static course-data snapshot and does not enroll courses in SIS.
+
+Choose **2026-27 Term 1** or **2026-27 Term 2** in the sidebar before selecting courses. The public demo may still run an older version until v3.0.0 is deployed.
 
 ## Screenshots
 
@@ -86,15 +88,15 @@ The live app is deployed with Streamlit Community Cloud:
 | `examples/` | Request and reference result JSON files |
 | `tests/` | Core and UI regression checks |
 | `docs/` | Usage, scoring model, and database documentation |
-| `archive/` | Historical v1.0.0 and v2.0.0 versions |
+| `archive/` | Historical v1.0.0, v2.0.0, and v2.0.1 versions |
 
 ## Data
 
-`data/term1_2026_2027.sqlite` is the default dataset for the v2.0.1 app, optimizer, CLI, and course-query helper. The bundled database now contains 494 courses, 1,564 sections, and 1,605 meeting records: 1,476 sections belong to Term 1 and 88 verified sections belong to Term 2. The app and CLI default to Term 1; use `load_catalog(term="2026-27 Term 2")` or `get_schedule(code, term="2026-27 Term 2")` for the six newly verified Term 2 courses. The earlier 34-course `data/freshman_term1_2026_2027.sqlite` is retained for reference.
+`data/term1_2026_2027.sqlite` is a multi-term dataset despite its historical filename. This copy contains 498 courses, 1,689 sections, and 1,730 meeting records: 1,476 sections belong to Term 1 and 213 verified sections belong to Term 2. The app offers a semester selector; the CLI defaults to Term 1 for compatibility. Add `"term": "2026-27 Term 2"` to a CLI request to plan Term 2. `load_catalog(term="2026-27 Term 2")` and `get_schedule(code, term="2026-27 Term 2")` also support direct queries. AIE1901 has no Term 2 offering in the SIS catalog at the time of verification.
 
 The adapter preserves the CHI1000 Lecture-only correction without modifying the source database. Sections with missing teaching dates or times are excluded from planning and reported as warnings; their course/component requirements remain in place. Courses with no usable section for a required component cannot be automatically scheduled.
 
-The November 9, 2026 database refresh adds the completed F-, G-, and H-prefix SIS collections. Application code and historical snapshots are unchanged. Example outputs are preserved reference files, not newly generated results. The database guide and collection notes in `docs/` document the source history; executable paths now resolve relative to the source file.
+The November 9, 2026 database refresh added the completed F-, G-, and H-prefix SIS collections. The November 13 release adds the Term 2 records and semester selection. Example outputs are preserved reference files, not newly generated results. The database guide and collection notes in `docs/` document the source history; executable paths resolve relative to the source file.
 
 ## Model and limitations
 
@@ -108,11 +110,11 @@ An optimal status applies only to the supplied candidate data, constraints, and 
 
 GitHub Actions runs the core test suite on Python 3.10 and 3.13 for pushes and pull requests. The suite covers scoring against exhaustive enumeration, hard constraints, date-aware conflicts, the full database, and incomplete meeting records. It uses the Python standard library; UI regression checks require the application dependencies and run separately.
 
-See [CHANGELOG.md](CHANGELOG.md) for the v2.0.1 changes. The `VERSION` file identifies the working version; a published GitHub Release is a separate repository milestone.
+See [CHANGELOG.md](CHANGELOG.md) for the v3.0.0 changes. The `VERSION` file identifies the working version; a published GitHub Release is a separate repository milestone.
 
 ## Historical versions
 
-`archive/v1.0.0/` and `archive/v2.0.0/` preserve previous layouts and databases, with English documentation and interface labels. Start the maintained application from the project root. Future changes can be recorded using Git commits and release tags.
+`archive/v1.0.0/`, `archive/v2.0.0/`, and `archive/v2.0.1/` preserve previous layouts and databases. Start the maintained application from the project root. Future changes can be recorded using Git commits and release tags.
 
 Maintained by [Zhenjia Pan](https://github.com/zhenjiapan).
 
@@ -122,4 +124,4 @@ Documentation and interface text are in English. Original Chinese course names a
 
 ## 2026–27 Term 2 verification copy
 
-On November 13, 2026, the SIS full-section view was checked for CSC3001, DDA2001, CSC3200, PHY1001, GFN1000, and CEC2000. Their 88 Term 2 sections and meetings were added to this copy. The updated guide is `docs/大一下选课指南_2026-27_Term2_已核区段.pdf`. The database filename is historical; query the `term` field to distinguish semesters. No enrollment status or Lecture/Tutorial binding was inferred. See `docs/database-guide.md` for counts and scope. The original repository was not modified.
+On November 13, 2026, the SIS full-section view was checked for CSC3001, DDA2001, CSC3200, PHY1001, GFN1000, CEC2000, MAT1002, STA2001, ENG1002, and PED1214. Their 213 Term 2 sections and meetings were added to v3.0.0. AIE1901 had no Term 2 option in SIS. The updated guide is `docs/大一下选课指南_更新版.pdf`. The database filename is historical; query the `term` field to distinguish semesters. No enrollment status or Lecture/Tutorial binding was inferred. See `docs/database-guide.md` for counts and scope.

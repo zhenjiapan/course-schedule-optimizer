@@ -1,10 +1,24 @@
-# 2026-11-13: Term 2 section verification
+# Changelog
+
+## v3.0.0 — November 13, 2026
+
+- Archived the previous working version and its databases in `archive/v2.0.1/`.
+- Added semester selection for 2026-27 Terms 1 and 2. The default remains Term 1 for existing command-line requests.
+- Added verified Term 2 course and section data to the existing multi-term SQLite database. The historical database filename remains unchanged.
+- Updated the spring course guide, database documentation, and example queries for the new term.
+
+### Semester selector and further Term 2 courses
+
+- Added all SIS-listed Term 2 sections for MAT1002 (50), STA2001 (10), ENG1002 (62), and PED1214 (3) to a copy of the existing database. Total Term 2 sections: 213.
+- Checked AIE1901 in SIS; its term selector only lists Term 1, so no Term 2 sections were added.
+- Added a Term 1 / Term 2 selector to the Streamlit app, semester-specific course choices, and a `term` field for CLI requests and JSON exports.
+- Appended verified course details and all 125 new sections to the user's original seven-page spring course guide PDF. The original seven pages are preserved.
+
+### Term 2 section verification
 
 - Verified all displayed sections and meeting times in SIS for CSC3001 (3), DDA2001 (11), CSC3200 (4), PHY1001 (16), GFN1000 (42), and CEC2000 (12). Added 88 Term 2 sections to a new database copy.
 - Updated the spring course guide PDF and documented that the bundled database contains both terms. The app and CLI continue to default to Term 1; the query helper accepts an optional term filter.
 - New totals: 494 courses, 1,564 sections, 1,605 meetings, 1,944 weekday associations. The original repository was not changed.
-
-# Changelog
 
 ## H-prefix data refresh — November 9, 2026
 

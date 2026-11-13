@@ -18,9 +18,10 @@ h1{letter-spacing:-.04em} [data-testid="stMetricValue"]{font-size:1.65rem}
 .stDownloadButton button{width:100%}
 </style>''', unsafe_allow_html=True)
 st.title('Course Planner')
-st.caption('2026–27 · Term 1  / Select courses → Set preferences → Compare and edit')
+term = st.sidebar.selectbox('Semester', ['2026-27 Term 1', '2026-27 Term 2'], key='semester')
+st.caption(f'{term} / Select courses → Set preferences → Compare and edit')
 try:
-    cat = load_catalog()
+    cat = load_catalog(term=term)
 except Exception as exc:
     st.error(f'Unable to read course data: {exc}')
     st.stop()
@@ -28,7 +29,7 @@ except Exception as exc:
 with st.sidebar:
     st.header('Courses this semester')
     codes = st.multiselect('Select courses to take', sorted(cat.courses),
-        format_func=lambda c: f"{c} · {cat.courses[c]['name']}", key='courses')
+        format_func=lambda c: f"{c} · {cat.courses[c]['name']}", key=f'courses_{term}')
     credits = sum(cat.courses[c]['credits'] for c in codes)
     st.metric('Selected credits', f'{credits:g}', help='Every selected course must be scheduled. Total credits must be between 12 and 18.')
     if not codes:
@@ -100,7 +101,7 @@ with st.expander('Scheduling preferences and unavailable times', expanded=True):
 
 p = Preferences(early, weekdays, teachers, ban_early, tuple(banned), tuple(blocked))
 db_hash = hashlib.sha256(DB.read_bytes()).hexdigest()
-signature = hashlib.sha256((db_hash+json.dumps([codes, asdict(p)], sort_keys=True)).encode()).hexdigest()
+signature = hashlib.sha256((db_hash+json.dumps([term, codes, asdict(p)], sort_keys=True)).encode()).hexdigest()
 ready = bool(codes) and 12 <= credits <= 18 and not bad_block
 
 
@@ -125,7 +126,7 @@ if st.button('Generate recommendations', type='primary', key='generate', disable
 saved = st.session_state.get('result')
 current = saved is not None and saved[0] == signature
 if saved and not current:
-    st.info('Courses, preferences, or the database have changed. Regenerate the timetable. Previous plans are hidden.')
+    st.info('Semester, courses, preferences, or the database have changed. Regenerate the timetable. Previous plans are hidden.')
 
 st.divider()
 st.subheader('My timetable')
@@ -209,7 +210,7 @@ if selections is not None and report is not None:
         downloads = st.columns(2)
         downloads[0].download_button('Export weekly CSV', pd.DataFrame(visible).to_csv(index=False).encode('utf-8-sig'),
             f'timetable_{monday}.csv', 'text/csv', key='csv', disabled=not rows)
-        payload = {'courses': codes, 'preferences': asdict(p), 'solution': sol, 'validation': report,
+        payload = {'term': term, 'courses': codes, 'preferences': asdict(p), 'solution': sol, 'validation': report,
             'status': status, 'database_sha256': db_hash}
         downloads[1].download_button('Export the complete semester plan', json.dumps(payload, ensure_ascii=False, indent=2),
             'schedule.json', 'application/json', key='json')

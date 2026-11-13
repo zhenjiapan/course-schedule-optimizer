@@ -8,7 +8,7 @@ from streamlit.testing.v1 import AppTest
 at=AppTest.from_file(str(p/'app.py'),default_timeout=30).run()
 assert not at.exception
 assert at.button(key='generate').disabled
-at.multiselect(key='courses').set_value(['AIE1001','AIE1901','MAT1001','ENG1001','CHI1000','PED1113']).run()
+at.multiselect(key='courses_2026-27 Term 1').set_value(['AIE1001','AIE1901','MAT1001','ENG1001','CHI1000','PED1113']).run()
 at.selectbox(key='early_mode').set_value('Avoid where possible').run()
 at.button(key='generate').click().run()
 assert not at.exception,at.exception
@@ -36,7 +36,13 @@ at.multiselect(key='banned_days').set_value([1,2,3,4,5,6,7]).run()
 assert any('Regenerate' in s.value for s in at.info)
 at.button(key='generate').click().run()
 assert not at.exception and len(at.error)>0
-at.multiselect(key='courses').set_value(['MAT1001']).run()
+at.multiselect(key='courses_2026-27 Term 1').set_value(['MAT1001']).run()
 assert at.button(key='generate').disabled
 assert any('credits' in s.value.lower() for s in at.warning)
+at.selectbox(key='semester').set_value('2026-27 Term 2').run()
+assert not at.exception
+term2_codes = at.multiselect(key='courses_2026-27 Term 2').options
+assert all(any(option.startswith(code + ' · ') for option in term2_codes)
+           for code in ('MAT1002', 'STA2001', 'ENG1002', 'PED1214'))
+assert not any(option.startswith('AIE1901 · ') for option in term2_codes)
 print('PASS: generate, one preview, manual persistence, missing component, switch solution, stale, infeasible, credits')
