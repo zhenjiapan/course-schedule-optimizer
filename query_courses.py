@@ -15,12 +15,14 @@ def get_course(code):
         row = conn.execute('SELECT * FROM courses WHERE code = ?', (code,)).fetchone()
         return dict(row) if row else None
 
-def get_schedule(code):
-    """Return all available sections for a course, not a personal enrolled timetable."""
+def get_schedule(code, term=None):
+    """Return candidate sections for a course, optionally limited to one term."""
     with connect() as conn:
+        where = 'WHERE course_code = ?' + (' AND term = ?' if term else '')
+        params = (code, term) if term else (code,)
         return [dict(row) for row in conn.execute(
-            'SELECT * FROM schedule WHERE course_code = ? ORDER BY section_code, meeting_id',
-            (code,))]
+            f'SELECT * FROM schedule {where} ORDER BY term, section_code, meeting_id',
+            params)]
 
 def find_by_weekday(weekday):
     """Return meetings on a weekday; Monday is 1 and Sunday is 7."""

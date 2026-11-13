@@ -90,7 +90,7 @@ The live app is deployed with Streamlit Community Cloud:
 
 ## Data
 
-`data/term1_2026_2027.sqlite` is the default dataset for the v2.0.1 app, optimizer, CLI, and course-query helper. The bundled full snapshot contains 493 courses, 1,476 sections, and 1,517 meeting records (A–H checked). The earlier 34-course `data/freshman_term1_2026_2027.sqlite` is retained for reference.
+`data/term1_2026_2027.sqlite` is the default dataset for the v2.0.1 app, optimizer, CLI, and course-query helper. The bundled database now contains 494 courses, 1,564 sections, and 1,605 meeting records: 1,476 sections belong to Term 1 and 88 verified sections belong to Term 2. The app and CLI default to Term 1; use `load_catalog(term="2026-27 Term 2")` or `get_schedule(code, term="2026-27 Term 2")` for the six newly verified Term 2 courses. The earlier 34-course `data/freshman_term1_2026_2027.sqlite` is retained for reference.
 
 The adapter preserves the CHI1000 Lecture-only correction without modifying the source database. Sections with missing teaching dates or times are excluded from planning and reported as warnings; their course/component requirements remain in place. Courses with no usable section for a required component cannot be automatically scheduled.
 
@@ -119,3 +119,7 @@ Maintained by [Zhenjia Pan](https://github.com/zhenjiapan).
 ## Language
 
 Documentation and interface text are in English. Original Chinese course names are retained. Raw SIS database data is preserved for source fidelity and exact enum matching. Exported table headers and score breakdown labels are English. See [reorganization notes](docs/reorganization.md) for the language update and validation scope.
+
+## 2026–27 Term 2 verification copy
+
+On November 13, 2026, the SIS full-section view was checked for CSC3001, DDA2001, CSC3200, PHY1001, GFN1000, and CEC2000. Their 88 Term 2 sections and meetings were added to this copy. The updated guide is `docs/大一下选课指南_2026-27_Term2_已核区段.pdf`. The database filename is historical; query the `term` field to distinguish semesters. No enrollment status or Lecture/Tutorial binding was inferred. See `docs/database-guide.md` for counts and scope. The original repository was not modified.

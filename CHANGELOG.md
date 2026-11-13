@@ -1,3 +1,9 @@
+# 2026-11-13: Term 2 section verification
+
+- Verified all displayed sections and meeting times in SIS for CSC3001 (3), DDA2001 (11), CSC3200 (4), PHY1001 (16), GFN1000 (42), and CEC2000 (12). Added 88 Term 2 sections to a new database copy.
+- Updated the spring course guide PDF and documented that the bundled database contains both terms. The app and CLI continue to default to Term 1; the query helper accepts an optional term filter.
+- New totals: 494 courses, 1,564 sections, 1,605 meetings, 1,944 weekday associations. The original repository was not changed.
+
 # Changelog
 
 ## H-prefix data refresh — November 9, 2026

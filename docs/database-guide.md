@@ -1,4 +1,4 @@
-# Course Database: 2026–27 Term 1
+# Course Database: 2026–27 Terms 1 and 2
 
 The source is authenticated SIS course-detail and full section-list pages. Initial collection took place on October 25–26, 2026. The table below is the original 34-course baseline, not an inventory of later expansions. Course names remain in their original Chinese form.
 
@@ -53,6 +53,7 @@ python3 query_courses.py
 from query_courses import get_course, get_schedule, find_by_weekday
 course = get_course('MAT1001')
 sections = get_schedule('MAT1001')
+term2_sections = get_schedule('CSC3001', term='2026-27 Term 2')
 monday = find_by_weekday(1)
 ```
 
@@ -84,6 +85,7 @@ With Pandas installed, use `pd.read_sql_query('SELECT * FROM schedule', conn)` f
 | `sources` | Collection timestamps, sources, raw course fields, page-archive checksums, and page section totals |
 | `schedule` | Convenient course, section, and meeting query view |
 | `course_summary` | Course details and section counts |
+| `collection_runs` | Verification date, term, and scope for the six added Term 2 courses |
 
 Times use 24-hour `HH:MM`; dates use `YYYY-MM-DD`, interpreted in Asia/Shanghai. Original source values are retained in `_raw` fields. TBA-only entries have NULL normalized times or dates while retaining the source text. Optional fields absent from SIS remain NULL; missing requirements are never invented.
 
@@ -151,8 +153,14 @@ F-prefix totals: 47 courses, 101 sections, and 105 meetings (FEX 11 courses, FIN
 
 ### November 9, 2026: H-prefix completion
 
-Checked HKSL, HSS, and HST at every catalog level using the SIS course-detail and full section view. Both HSS1002 catalog entries were checked. HKSL had no confirmed target-term sections and HST entries were unscheduled. Added HSS1004 (3 sections), HSS1006 (1), HSS1010 (1), and HSS1011 (3): four courses, eight sections, eight meetings, and twelve weekday associations. The A–H snapshot now has **493 courses, 1,476 sections, 1,517 meetings, and 1,846 weekday associations**. All sections belong to `2026-27 Term 1`; integrity and foreign-key checks passed. Enrollment availability and Lecture/Tutorial bindings are absent.
+Checked HKSL, HSS, and HST at every catalog level using the SIS course-detail and full section view. Both HSS1002 catalog entries were checked. HKSL had no confirmed target-term sections and HST entries were unscheduled. Added HSS1004 (3 sections), HSS1006 (1), HSS1010 (1), and HSS1011 (3): four courses, eight sections, eight meetings, and twelve weekday associations. The A–H snapshot now has **493 courses, 1,476 sections, 1,517 meetings, and 1,846 weekday associations**. At this historical checkpoint, all sections belonged to `2026-27 Term 1`; integrity and foreign-key checks passed. Enrollment availability and Lecture/Tutorial bindings are absent.
 
 ## Language and data preservation
 
 Documentation, interface labels, comments, and export headers are in English. Chinese course names are preserved. Raw SIS data, including original source fields, is retained without translation to preserve provenance and database compatibility. Source enum matching remains exact.
+
+## November 13, 2026: Term 2 section verification
+
+The SIS Browse Course Catalog route was used for six courses in the updated spring guide: Course Details → 2026–27 Term 2 → Show Sections → View All. Every displayed section and meeting line was checked. The database copy adds CSC3001 (3 sections), DDA2001 (11), CSC3200 (4), PHY1001 (16), GFN1000 (42), and CEC2000 (12): **88 sections, 88 meetings, 98 weekday associations**. DDA2001 was a new course row; the other five already had Term 1 records. The SIS instructor field showed `员工` for the new section listings; it remains a placeholder rather than a named teacher.
+
+The combined database has **494 courses, 1,564 sections, 1,605 meetings, and 1,944 weekday associations**. Of its sections, 1,476 are Term 1 and 88 are Term 2. The database filename `term1_2026_2027.sqlite` is historical; always filter on `sections.term` or `schedule.term` for cross-term analysis. The app and CLI load Term 1 by default so their existing planning results do not mix semesters. Python can load the six-course Term 2 catalog with `load_catalog(term="2026-27 Term 2")`. The `sources` table still describes the original course-page collection; `collection_runs` records this later Term 2 verification. DDA2001 course description is a concise summary of the SIS content, not a verbatim transcript. This snapshot does not imply a personal enrollment, section availability, or a Lecture/Tutorial binding. SQLite integrity and foreign-key checks passed. The original repository was left untouched.

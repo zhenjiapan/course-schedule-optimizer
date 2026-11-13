@@ -57,24 +57,22 @@ def dates(m):
         d+=timedelta(days=7)
 
 
-def load_catalog(path=DB):
+def load_catalog(path=DB, term='2026-27 Term 1'):
     con=sqlite3.connect(Path(path).resolve().as_uri()+'?mode=ro',uri=True)
     con.row_factory=sqlite3.Row
     try:
-        courses={r['code']:dict(r) for r in con.execute('SELECT * FROM courses')}
+        offered_codes={r[0] for r in con.execute('SELECT DISTINCT course_code FROM sections WHERE term=?',(term,))}
+        courses={r['code']:dict(r) for r in con.execute('SELECT * FROM courses') if r['code'] in offered_codes}
         required={code:set() for code in courses}
         for r in con.execute('SELECT * FROM course_components'):
-            if r['requirement']=='\u5fc5\u9700':
+            if r['course_code'] in required and r['requirement']=='\u5fc5\u9700':
                 required[r['course_code']].add(COMPONENTS.get(r['component'],r['component']))
         sections={code:[] for code in courses}
         warnings=[]
-        terms={r[0] for r in con.execute('SELECT DISTINCT term FROM sections')}
-        if len(terms)>1:
-            raise ValueError('The database contains multiple semesters. Provide data for a single semester.')
         # CHI1000 is Lecture-only; the full SIS snapshot retains a stale Tutorial requirement.
         if 'CHI1000' in required:
             required['CHI1000'].discard('TUT')
-        for s in con.execute('SELECT * FROM sections ORDER BY course_code,section_code'):
+        for s in con.execute('SELECT * FROM sections WHERE term=? ORDER BY course_code,section_code',(term,)):
             merged={}
             incomplete=False
             for r in con.execute('SELECT m.*,d.weekday FROM meetings m JOIN meeting_days d ON d.meeting_id=m.id WHERE m.section_id=?',(s['id'],)):
@@ -106,7 +104,7 @@ def load_catalog(path=DB):
             if not required[code]:
                 # Keep component requirements even when all their sections have unknown times.
                 required[code]={r[0] for r in con.execute(
-                    'SELECT DISTINCT component FROM sections WHERE course_code=?',(code,))}
+                    'SELECT DISTINCT component FROM sections WHERE course_code=? AND term=?',(code,term))}
             if code=='CHI1000': required[code].discard('TUT')
             missing=required[code]-offered
             if missing: warnings.append(f'{code} Missing sections for required components: {", ".join(sorted(missing))}')
