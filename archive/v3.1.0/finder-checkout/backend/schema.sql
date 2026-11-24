@@ -1,0 +1,13 @@
+CREATE TABLE sources(id INTEGER PRIMARY KEY, course_code TEXT UNIQUE, term TEXT, collected_at TEXT, source_url TEXT, archive_sha256 TEXT, expected_sections INTEGER, raw_course_text TEXT);
+CREATE TABLE courses(code TEXT PRIMARY KEY,name TEXT NOT NULL,career TEXT,credits DOUBLE PRECISION NOT NULL CHECK(credits >= 0),credits_raw TEXT,grading_basis TEXT,campus TEXT,academic_group TEXT,academic_organization TEXT,prerequisites_raw TEXT,description TEXT,source_id INTEGER REFERENCES sources(id));
+CREATE TABLE course_components(course_code TEXT REFERENCES courses(code),component TEXT,requirement TEXT,PRIMARY KEY(course_code,component));
+CREATE TABLE course_attributes(course_code TEXT REFERENCES courses(code),attribute TEXT,PRIMARY KEY(course_code,attribute));
+CREATE TABLE sections(id INTEGER PRIMARY KEY,course_code TEXT NOT NULL REFERENCES courses(code),term TEXT NOT NULL,section_code TEXT NOT NULL,component TEXT NOT NULL,class_number TEXT,session TEXT,label_raw TEXT,source_id INTEGER REFERENCES sources(id),UNIQUE(course_code,term,class_number),UNIQUE(course_code,term,section_code));
+CREATE TABLE meetings(id INTEGER PRIMARY KEY,section_id INTEGER NOT NULL REFERENCES sections(id),sequence INTEGER NOT NULL,days_raw TEXT,start_time TIME,end_time TIME,room TEXT,start_date DATE,end_date DATE,start_time_raw TEXT,end_time_raw TEXT,dates_raw TEXT,instructors_raw TEXT,UNIQUE(section_id,sequence),CHECK(start_time < end_time),CHECK(start_date <= end_date));
+CREATE TABLE meeting_days(meeting_id INTEGER REFERENCES meetings(id),weekday INTEGER CHECK(weekday BETWEEN 1 AND 7),PRIMARY KEY(meeting_id,weekday));
+CREATE TABLE instructors(id INTEGER PRIMARY KEY,name TEXT NOT NULL UNIQUE,is_placeholder INTEGER NOT NULL DEFAULT 0 CHECK(is_placeholder IN (0,1)));
+CREATE TABLE meeting_instructors(meeting_id INTEGER REFERENCES meetings(id),instructor_id INTEGER REFERENCES instructors(id),PRIMARY KEY(meeting_id,instructor_id));
+CREATE TABLE collection_runs (course_code TEXT NOT NULL, term TEXT NOT NULL, verified_at TEXT NOT NULL, method TEXT NOT NULL, section_count INTEGER NOT NULL, notes TEXT, PRIMARY KEY(course_code,term));
+CREATE TABLE section_bindings (course_code TEXT NOT NULL, term TEXT NOT NULL, lecture_section TEXT NOT NULL, tutorial_section TEXT NOT NULL, verified_at TEXT NOT NULL, PRIMARY KEY(course_code,term,lecture_section,tutorial_section));
+CREATE INDEX sections_term_course ON sections(term, course_code);
+CREATE INDEX meeting_instructors_instructor ON meeting_instructors(instructor_id);

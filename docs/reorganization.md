@@ -1,5 +1,7 @@
 # Reorganization and Language Update
 
+> 本文正文保留历史版本说明。当前版本、数据与启动方法见 [Streamlit v3.2.0 使用与维护](streamlit-v3.2.0.md)。
+
 Current version: **v2.0.1**. Historical directories are `archive/v1.0.0/` and `archive/v2.0.0/`. Original version names 1.0, 2.0, and 2.1 map to v1.0.0, v2.0.0, and v2.0.1 respectively.
 
 The current application's source files are at the root; databases, examples, tests, and documentation are grouped separately. Database paths are resolved relative to source files. Duplicate full-database materials were consolidated. macOS metadata, compiled Python caches, and old development-tool records were excluded.

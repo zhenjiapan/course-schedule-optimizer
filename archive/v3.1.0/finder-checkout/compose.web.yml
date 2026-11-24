@@ -1,0 +1,31 @@
+services:
+  db:
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: ${PLANNER_DOCKER_DATABASE_URL:-postgresql+psycopg://planner:planner@db:5432/planner}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; urlopen('http://127.0.0.1:8000/api/health', timeout=3).close()"]
+      interval: 5s
+      timeout: 4s
+      retries: 12
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "127.0.0.1:3100:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health', {signal: AbortSignal.timeout(3000)}).then(r => {if (!r.ok) process.exitCode = 1}).catch(() => {process.exitCode = 1})"]
+      interval: 5s
+      timeout: 4s
+      retries: 12

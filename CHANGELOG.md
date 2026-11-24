@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.2.0 — 2026-11-25
+
+- 新增 Streamlit 入口，沿用 V4 求解器和独立校验，改为直接读取只读 SQLite。
+- 提供配对、硬约束、偏好权重、进度预览、完整计数、周课表、手动换班及 CSV 和 JSON 导出。
+- 补充启动、评分、数据库及历史版本入口说明。
+
+## v3.1.0 — 全栈归档
+
+- 归档 Next.js、FastAPI、PostgreSQL 与 CP-SAT 全栈版，以及 Finder 中原仓库的代码快照。
+- 收录 FIN2010 第二学期 24 个班次与 44 条配对记录。
+- 补记每秒搜索进度、每十秒前三名预览、合格课表完整计数与分支总数，以及空档评分的精确分数修正。
+
+
 ## v3.0.1 — November 13, 2026
 
 - Added SIS-verified AIE1902 to 2026-27 Term 2: 11 supervision sections and 12 meeting records, including both rooms listed for S07.
@@ -74,3 +87,10 @@ Historical preference-based optimizer with backtracking, branch-and-bound search
 ## v1.0.0
 
 Historical manual course-selection and hard-constraint validation application.
+# Unreleased — 2026-11-22 SIS Term 2 refresh
+
+- Recollected every section for 12 requested 2026–27 Term 2 courses: 232 sections and 233 displayed meeting records, including closed sections.
+- Verified 148 lecture/tutorial choices across 36 lecture groups in the SIS related-section flow. The optimizer and checker now reject incompatible combinations.
+- Added MAT3007 to the catalog, corrected the changed DDA2001 section count, and preserved both SIS room records for AIE1902 S07.
+- Added a focused PostgreSQL sync and API/frontend support for the verified pairings.
+

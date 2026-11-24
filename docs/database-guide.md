@@ -1,5 +1,7 @@
 # Course Database: 2026–27 Terms 1 and 2
 
+> 本文正文保留历史版本说明。当前版本、数据与启动方法见 [Streamlit v3.2.0 使用与维护](streamlit-v3.2.0.md)。
+
 The source is authenticated SIS course-detail and full section-list pages. Initial collection took place on October 25–26, 2026. The table below is the original 34-course baseline, not an inventory of later expansions. Course names remain in their original Chinese form.
 
 | Course code | Course name | Sections |

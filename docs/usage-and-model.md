@@ -1,5 +1,7 @@
 # Course Schedule Optimizer v2.0.1
 
+> 本文正文保留历史版本说明。当前版本、数据与启动方法见 [Streamlit v3.2.0 使用与维护](streamlit-v3.2.0.md)。
+
 The application plans course schedules from the bundled semester snapshot. All sections participate regardless of enrollment availability. The adapter treats CHI1000 as Lecture-only, preserving the project correction without altering the original full database.
 
 ## Setup and launch

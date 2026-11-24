@@ -1,5 +1,7 @@
 # Database Collection Notes
 
+> 本文正文保留历史版本说明。当前版本、数据与启动方法见 [Streamlit v3.2.0 使用与维护](streamlit-v3.2.0.md)。
+
 This Markdown file replaces the original RTF notes. See [database guide](database-guide.md) for the complete collection history and schema.
 
 | Date | Recorded work |

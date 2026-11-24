@@ -5,7 +5,7 @@ from model import validate_request
 
 def check(cat,codes,selections,p):
     errors=validate_request(cat,codes,p)
-    warnings=['The database does not provide Lecture/Tutorial section-binding rules and personal prerequisite records; these rules have not been verified.']
+    warnings=['Personal prerequisite records are not available; verify eligibility in SIS.']
     if errors:return {'passed':False,'errors':errors,'warnings':warnings}
     selected=[];seen=set();components={c:[] for c in codes}
     for code,sec in selections:
@@ -24,6 +24,13 @@ def check(cat,codes,selections,p):
         for comp in required:
             if components[code].count(comp)!=1: errors.append(f'{code} {comp} Exactly one section must be selected.')
         if set(components[code])-required: errors.append(f'{code} Includes a non-required component.')
+        selected_lectures=[s.code for s in selected if s.course==code and s.component=='LEC']
+        selected_tutorials=[s.code for s in selected if s.course==code and s.component=='TUT']
+        if any(key[0]==code for key in cat.bindings):
+            for lecture in selected_lectures:
+                for tutorial in selected_tutorials:
+                    if tutorial not in cat.bindings.get((code,lecture),set()):
+                        errors.append(f'{code} {lecture} is not paired with {tutorial} in SIS.')
     calendar={}
     for s in selected:
         for m in s.meetings:
