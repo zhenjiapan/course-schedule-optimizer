@@ -96,38 +96,57 @@ def show_schedule(cat, selections, policy, term, report=None):
                        ensure_ascii=False, default=str), "schedule.json", "application/json")
 
 
-st.title("课表规划 v3.2.0")
-st.caption("课程与班次以学校 SIS 快照为准。实时余位、先修资格及注册结果请在 SIS 核实。")
-term = st.selectbox("学期", ["2026-27 Term 1", "2026-27 Term 2"])
+st.html(str(ROOT / "planner.css"))
+with st.container(key="planner_header"):
+    heading, semester = st.columns([5, 2], vertical_alignment="bottom")
+    with heading:
+        st.html('<div class="planner-kicker">选课工具 <span>V4</span></div>')
+        st.title("课表规划")
+    with semester:
+        term = st.selectbox("学期", ["2026-27 Term 1", "2026-27 Term 2"],
+                            format_func={"2026-27 Term 1": "2026–27 第一学期",
+                                         "2026-27 Term 2": "2026–27 第二学期"}.get)
+st.caption("学校 SIS 课程快照 · 课表可行性以快照为准。实时余位、先修资格和注册结果请在 SIS 核实。")
 if not SNAPSHOT.is_file():
     st.error("课程快照不存在。请设置 COURSE_SNAPSHOT 或查看 README。")
     st.stop()
 cat = load(term, SNAPSHOT.stat().st_mtime_ns)
-codes = st.multiselect("搜索并选择课程", sorted(cat.courses),
-                       format_func=lambda code: f"{code} · {cat.courses[code]['name']}")
-sections = {code: cat.sections[code] for code in codes}
-credits = sum(float(cat.courses[code]["credits"]) for code in codes)
-st.caption(f"已选 {len(codes)} 门 · {credits:g} 学分")
-with st.expander("班次、教学时间与配对"):
-    for code, items in sections.items():
-        st.write(code, "必需组件", ", ".join(sorted(cat.required[code])))
-        st.dataframe([{"班次": s.code, "组件": s.component, "星期": DAYS[m.weekday-1],
-                       "时间": f"{clock(m.start)}–{clock(m.end)}", "教师": " / ".join(m.teachers),
-                       "教室": " / ".join(m.rooms), "开始日期": m.first, "结束日期": m.last}
-                      for s in items for m in s.meetings], hide_index=True)
-        bindings = {lecture: sorted(tutorials) for (course, lecture), tutorials in cat.bindings.items() if course == code}
-        if bindings:
-            st.write(bindings)
-        for warning in cat.warnings:
-            if warning.startswith(code + " "):
-                st.caption(warning)
+with st.container(key="planner_workspace"):
+    left, right = st.columns([5, 7], gap="medium")
+    config = left.container(key="planner_config")
+    output = right.container(key="planner_results")
+with config:
+    courses, hard, times, structure, weights, search = st.tabs([
+        "A 课程与学分", "B 排课硬约束", "C 时间与教师",
+        "D 课表结构", "E 偏好重要性", "F 求解设置",
+    ])
+    with courses:
+        st.subheader("课程与学分")
+        st.markdown("#### 预选课程")
+        codes = st.multiselect("搜索并选择课程", sorted(cat.courses),
+                               format_func=lambda code: f"{code} · {cat.courses[code]['name']}")
+        sections = {code: cat.sections[code] for code in codes}
+        credits = sum(float(cat.courses[code]["credits"]) for code in codes)
+        with st.expander("班次、教学时间与配对"):
+            for code, items in sections.items():
+                st.write(code, "必需组件", ", ".join(sorted(cat.required[code])))
+                st.dataframe([{"班次": s.code, "组件": s.component, "星期": DAYS[m.weekday-1],
+                               "时间": f"{clock(m.start)}–{clock(m.end)}", "教师": " / ".join(m.teachers),
+                               "教室": " / ".join(m.rooms), "开始日期": m.first, "结束日期": m.last}
+                              for s in items for m in s.meetings], hide_index=True)
+                bindings = {lecture: sorted(tutorials) for (course, lecture), tutorials in cat.bindings.items() if course == code}
+                if bindings:
+                    st.write(bindings)
+                for warning in cat.warnings:
+                    if warning.startswith(code + " "):
+                        st.caption(warning)
 
-with st.container():
-    limits, hard, times, structure, weights = st.tabs(["学分", "硬约束", "时间与教师", "课表结构", "偏好权重"])
-    with limits:
-        minimum = st.number_input("最低学分", min_value=0.0, value=12.0)
-        maximum = st.number_input("最高学分", min_value=0.0, value=18.0)
+        st.markdown("#### 学分范围")
+        min_col, max_col = st.columns(2)
+        minimum = min_col.number_input("最低学分", min_value=0.0, value=12.0)
+        maximum = max_col.number_input("最高学分", min_value=0.0, value=18.0)
     with hard:
+        st.subheader("排课硬约束")
         options = [(code, s.code) for code, items in sections.items() for s in items]
         rules = {key: st.multiselect(label, options) for key, label in
                  (("required", "必须选的班次"), ("locked", "锁定班次"), ("excluded", "排除班次"))}
@@ -137,6 +156,7 @@ with st.container():
         presets = st.multiselect("快捷禁排时段", list(PERIODS), format_func=PERIODS.get)
         blocked = st.text_area("自定义不可用时间，每行填写：星期数字,开始,结束", placeholder="1,08:30,12:00")
     with times:
+        st.subheader("时间与教师")
         earliest, latest = boundary("最早上课", "10:00"), boundary("最晚下课", "18:00")
         early = rating("早八偏好", "early")
         weekday_ratings = {i: rating(day, f"day-{i}") for i, day in enumerate(DAYS, 1)}
@@ -145,6 +165,7 @@ with st.container():
         with st.expander("教师偏好"):
             teacher_ratings = {name: rating(name, f"teacher-{name}") for name in teachers}
     with structure:
+        st.subheader("课表结构")
         gaps = st.selectbox("课间空档", [None, "compact", "balanced", "spacious"],
                             format_func=lambda s: {None:"不限", "compact":"紧凑", "balanced":"均衡", "spacious":"宽松"}[s])
         distribution = st.selectbox("周内分布", [None, "concentrated", "distributed"],
@@ -161,16 +182,29 @@ with st.container():
             if comparison:
                 counts[period] = {"comparison": comparison, "target": target}
     with weights:
+        st.subheader("偏好重要性")
         disabled = st.multiselect("关闭的评分项", CATEGORIES, format_func=CATEGORIES.get)
         importance = {key: rating(label + "重要性", f"weight-{key}") for key, label in CATEGORIES.items()}
-    submitted = st.button("搜索课表", type="primary")
+    with search:
+        st.subheader("求解设置")
+        st.write("搜索持续到完成证明。每秒刷新计数，每 10 秒更新前三张课表。")
+
+with output:
+    summary, action = st.columns([3, 2], vertical_alignment="center")
+    with summary:
+        st.subheader("推荐课表")
+        st.caption(f"{len(codes)} 门已选课程 · {credits:g} 学分")
+    with action:
+        submitted = st.button("生成课表", type="primary", use_container_width=True)
+    feedback = st.empty()
+    st.divider()
 
 if submitted:
     current = st.session_state.get("search")
     if current and not current[0].done():
-        st.warning("已有搜索正在进行。")
+        feedback.warning("已有搜索正在进行。")
     elif not codes:
-        st.warning("请先选择课程。")
+        feedback.warning("请先选择课程。")
     else:
         try:
             slot_times = {"morning": (0, 720), "afternoon": (720, 1080), "evening": (1080, 1440)}
@@ -192,7 +226,7 @@ if submitted:
                             free_days={"mode": free_mode, "minimum": free_days} if free_mode else None,
                             weights=importance, disabled=disabled)
         except ValueError as error:
-            st.error(str(error))
+            feedback.error(str(error))
         else:
             progress = {}
             future = workers().submit(work, cat, codes, policy, progress)
@@ -205,9 +239,15 @@ if submitted:
 def results():
     current = st.session_state.get("search")
     if not current:
+        st.html("""<div class="planner-empty">
+          <div class="planner-calendar" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+          <strong>等待生成课表</strong>
+          <span>选择课程并按需设置约束，然后点击「生成课表」。</span>
+        </div>""")
         return
     future, progress, search_cat, search_codes, search_policy, search_term = current
-    st.subheader("搜索结果")
     st.caption(f"{search_term} · {', '.join(search_codes)}")
     answer = None
     if future.done():
@@ -277,4 +317,5 @@ def results():
     show_schedule(search_cat, selections, search_policy, search_term, report)
 
 
-results()
+with output:
+    results()
