@@ -19,3 +19,10 @@ python3 -m venv .venv
 - [版本变更](CHANGELOG.md)
 - [原 README 与历史入口](docs/legacy-readme.md)
 - [v3.1.0 归档说明](archive/v3.1.0/ARCHIVE.md)
+
+## 仓库目录
+
+- `streamlit-v3.2.0/`：当前 Streamlit 应用，从这里运行 `app.py`。
+- `archive/v3.1.0/`：v3.1.0 全栈版归档。
+- `archive/legacy-root/`：原根目录的旧程序、数据、脚本、测试和 Docker 配置。
+- `docs/`：使用、数据和部署说明。

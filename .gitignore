@@ -10,3 +10,11 @@ node_modules/
 /.version-backup.*/
 /archive/v3.1.0/private/
 /streamlit-v3.2.0/private/
+
+.DS_Store
+
+/private/
+
+/archive/legacy-root/data/
+
+/archive/database_before_*.sqlite
