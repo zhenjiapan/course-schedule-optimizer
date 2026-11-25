@@ -1,0 +1,3 @@
+export default function About() {
+  return <main className="prose-page"><h1>About</h1><h2>How plans are ranked</h2><p>The planner uses backtracking and branch-and-bound to search section combinations. Configured early-class, weekday and instructor categories receive equal weight. Time preferences count actual semester meetings.</p><h2>How plans are checked</h2><p>A separate validator expands meeting dates and checks component requirements, credits, overlaps and unavailable times.</p><h2>Before enrollment</h2><p>Verify prerequisites, lecture/tutorial bindings and current section availability in SIS. A search that reaches its deadline may return feasible plans whose optimality has yet to be established.</p></main>;
+}

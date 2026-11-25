@@ -18,3 +18,5 @@ node_modules/
 /archive/legacy-root/data/
 
 /archive/database_before_*.sqlite
+
+/archive/v3.2.0/private/
