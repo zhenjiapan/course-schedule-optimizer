@@ -1,4 +1,4 @@
-*
+**
 !package.json
 !package-lock.json
 !next.config.ts
@@ -9,3 +9,11 @@
 !app/**
 !features/
 !features/**
+!backend/
+!backend/requirements.txt
+!backend/app/
+!backend/app/**
+**/__pycache__
+!private/
+private/*
+!private/catalog.sqlite

@@ -1,21 +1,30 @@
-# Course Planner v3.3.0
+# Course Planner v3.3.0 单服务部署
 
-基于 v3.1.0 的 Next.js 界面和排课流程。首页、规划器与关于页导出为静态文件。Streamlit v3.2.0 归档在同级项目区的 archive/v3.2.0。
+Next.js 在构建时导出页面，FastAPI 在同一域名和端口提供页面与 /api 接口。运行时使用镜像内的只读 SQLite 课程目录。排课沿用 V4 优化器、独立检验和评分解释。搜索每秒轮询一次进度，每 10 秒刷新候选前三，完成后显示合格课表总数和求解器分支数。
 
-## 构建与本地预览
+## 本机运行
+
+在此目录执行以下命令，然后打开 http://127.0.0.1:3300/planner/ 。
 
 ```bash
-npm ci
-npm run build
-npm start
+docker build -t course-planner:3.3.0 .
+docker run --rm -p 127.0.0.1:3300:8000 course-planner:3.3.0
 ```
 
-打开 http://127.0.0.1:3300/ 。发布时，把 out/ 内的全部文件放在静态站点的域名根目录，并启用目录索引 index.html。
+## CloudBase 云托管
 
-## 连接排课接口
+在 steven-timetable 环境选择「云函数 / 托管 → 云托管 → 创建服务 → 本地代码」，上传根目录包含 Dockerfile 的部署 ZIP。服务端口为 8000，健康检查路径可设为 /api/health。启用 Web 访问并将实例数上限设为 1，避免发起求解和查询进度落到不同实例。重启会中断进行中的任务。客户端会轮询短请求，完整求解在服务进程内继续。
 
-课程查询、排课、进度和校验继续使用 v3.1.0 FastAPI 和其已导入数据的 PostgreSQL。推荐用同域反向代理，把 /api/ 原样转发给该后端，并把其他路径交给 out/ 中的静态文件。
+部署成功后，使用云托管服务的新 HTTPS 域名，访问 /planner/，选择 2026–27 第二学期搜索 FIN2010 并生成课表。数据库随服务发布，部署表单的环境变量留空。
 
-如果静态网站和 API 使用不同域名，在构建前设置 NEXT_PUBLIC_PLANNER_API_URL 为后端的 HTTPS 源地址（包括协议与域名，不加 /api）。后端或其反代需允许静态网站的 CORS 源，以及 POST 使用的 Content-Type 和 X-Search-Mode 请求头。改地址后重新构建。
+## 更新课程快照
 
-纯静态预览可打开所有页面。课程列表和求解需要可用的 API。导出目录不会打包课程数据库。
+执行下列命令生成新文件，确认后把它替换为 private/catalog.sqlite 并重新构建。
+
+```bash
+python3 scripts/export_catalog.py /path/to/sis.sqlite private/catalog-new.sqlite
+```
+
+导出只保留课程、班次、教师和会议等排课字段。数据库路径在网站目录之外，仅由 API 访问。部署包与镜像携带导出的目录，请通过所选 CloudBase 环境的本地代码上传或使用私有镜像仓库。原始快照和私有目录不应提交到公开仓库。
+
+本地已核对静态构建、同域路由、只读限制，以及 FIN2010 的完整求解和独立验证。Docker 镜像构建、跨进程进度和腾讯云部署需要在可运行容器的环境验收。

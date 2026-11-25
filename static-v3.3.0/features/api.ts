@@ -16,8 +16,7 @@ export const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturda
 export const clock = (n:number) => [Math.floor(n/60),n%60].map(x=>String(x).padStart(2,"0")).join(":");
 export const minute = (s:string) => {const [h,m]=s.split(":").map(Number); return h*60+m;};
 export async function api<T>(path:string, data?:object, extraHeaders?:Record<string,string>):Promise<T> {
-  const apiOrigin = (process.env.NEXT_PUBLIC_PLANNER_API_URL ?? "").replace(/\/+$/, "");
-  const response=await fetch(apiOrigin+"/api/"+path,data ? {method:"POST",headers:{"Content-Type":"application/json",...extraHeaders},body:JSON.stringify(data)} : undefined);
+  const response=await fetch("/api/"+path,data ? {method:"POST",headers:{"Content-Type":"application/json",...extraHeaders},body:JSON.stringify(data)} : undefined);
   if (!response.ok) {
     const body=await response.json().catch(()=>null);
     const detail=body?.error?.detail;
