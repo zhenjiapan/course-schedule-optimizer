@@ -1,3 +1,7 @@
 export default function About() {
-  return <main className="prose-page"><h1>About</h1><h2>How plans are ranked</h2><p>The planner uses backtracking and branch-and-bound to search section combinations. Configured early-class, weekday and instructor categories receive equal weight. Time preferences count actual semester meetings.</p><h2>How plans are checked</h2><p>A separate validator expands meeting dates and checks component requirements, credits, overlaps and unavailable times.</p><h2>Before enrollment</h2><p>Verify prerequisites, lecture/tutorial bindings and current section availability in SIS. A search that reaches its deadline may return feasible plans whose optimality has yet to be established.</p></main>;
+  return <main className="prose-page"><h1>关于课表规划</h1>
+    <h2>浏览器内排课</h2><p>课程快照随网站发布。浏览器在独立线程中搜索班次组合，并检查实际授课日期、组件配对、学分和硬约束。</p>
+    <h2>结果排序</h2><p>完成枚举后显示合格课表总数和搜索分支数。偏好分数使用浏览器浮点运算。班次很多时，请保持页面打开直到搜索结束。</p>
+    <h2>选课前核对</h2><p>请在学校 SIS 核对实时余位、先修要求和注册结果。</p>
+  </main>;
 }

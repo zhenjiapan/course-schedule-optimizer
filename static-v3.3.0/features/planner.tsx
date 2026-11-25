@@ -16,6 +16,7 @@ const modules=[
   ["F","求解设置","设置搜索时间和查看推荐规则"],
 ];
 const statuses:Record<string,string>={
+  browser_complete:"搜索完成 · 浏览器评分排序",
   optimal:"搜索完成", feasible_unproven:"已找到可行方案 · 部分或全部名次未获证明",
   timeout_no_feasible:"搜索超时 · 尚未找到已验证的可行方案", infeasible_proven:"已证明无解",
   insufficient_data:"课程或校历资料不足", invalid:"输入需要修正", internal_error:"结果验证未完成",
@@ -170,7 +171,7 @@ export default function Planner() {
         if(refreshPreview)nextPreview=performance.now()+10000;
         setProgress(previous=>({...snapshot,preview:refreshPreview?snapshot.preview:previous?.preview}));
         if(snapshot.result){setResult(snapshot.result);setIndex(0);break;}
-        if(snapshot.state==="failed"||snapshot.state==="timed_out")throw new Error("后台搜索未能完成。");
+        if(snapshot.state==="failed"||snapshot.state==="timed_out")throw new Error("浏览器搜索未能完成。");
         await new Promise(resolve=>setTimeout(resolve,1000));
       }
     }catch(e){setError(errorText(e));}finally{setBusy(false);}
@@ -228,7 +229,7 @@ export default function Planner() {
           {step===3&&<Structure form={{...form,weeks:confirmedWeeks}} update={update} weeks={weeks}/>}
           {step===4&&<Weights form={form} update={update}/>}
           {step===5&&<section className="v4-form-group"><h3>搜索与推荐</h3>
-            <p>搜索持续到完成证明。每秒刷新计数，每 10 秒更新前三张课表。最终名次以搜索完成后为准。</p>
+            <p>浏览器会搜索到枚举完成。每秒更新计数，评分阶段每 10 秒刷新暂列前三的课表。</p>
           </section>}
           <div className="v4-step-actions">
             {step>0&&<button className="secondary" onClick={()=>setStep(step-1)}>上一步</button>}
@@ -256,20 +257,20 @@ export default function Planner() {
         {error&&<p className="notice error" role="alert">{error}</p>}
         {result&&<>
           <p className="notice" role="status">{statuses[result.status]??result.status}。{result.status==="optimal"&&(result.proof_scope==="reference"?"已证明推荐名次。":"已按硬约束和稳定顺序生成。")}</p>
-          {!manual&&<p className="muted">返回 {result.solutions.length} 张 · 已证明 {result.certified_prefix??0} 个名次 · {((result.elapsed_ms??0)/1000).toFixed(2)} 秒</p>}
+          {!manual&&<p className="muted">返回 {result.solutions.length} 张 · {result.status==="browser_complete"?"已完成枚举":`已证明 ${result.certified_prefix??0} 个名次`} · {((result.elapsed_ms??0)/1000).toFixed(2)} 秒</p>}
           {result.search_summary&&<p className="muted">
             合格课表总数：{result.qualified_schedule_count!=null?formatCount(result.qualified_schedule_count):"未完成统计"}
             {" · "}搜索分支总数：{result.search_summary.branches.toLocaleString()}
           </p>}
           {result.search_summary&&<details className="v4-manual">
-            <summary>求解器搜索统计（诊断信息）</summary>
-            <p className="muted">CP-SAT 调用 {result.search_summary.solver_calls} 次 · 累计分支 {result.search_summary.branches} · 冲突 {result.search_summary.conflicts} · 求解器耗时 {result.search_summary.solver_wall_seconds.toFixed(2)} 秒</p>
+            <summary>浏览器搜索统计（诊断信息）</summary>
+            <p className="muted">枚举遍历 {result.search_summary.solver_calls} 轮 · 累计分支 {result.search_summary.branches} · 冲突 {result.search_summary.conflicts} · 求解器耗时 {result.search_summary.solver_wall_seconds.toFixed(2)} 秒</p>
             {result.search_model&&<p className="muted">课程评分组合：兼容 {result.search_model.course_patterns_kept} / 原始笛卡尔积 {result.search_model.course_pattern_space}</p>}
             <ul>{result.solver_runs?.map((run,i)=><li key={`${run.phase}-${i}`}>{run.phase}：{run.status}，分支 {run.branches}，冲突 {run.conflicts}，{run.wall_time_seconds.toFixed(2)} 秒</li>)}</ul>
           </details>}
           {result.errors.map(e=><p className="notice error" key={e}>{e}</p>)}
           {!result.solutions.length&&result.warnings?.map(w=><p key={w} className="muted">{w}</p>)}
-          <div className="plan-tabs">{result.solutions.map((s,i)=><button key={i} className="secondary" disabled={busy} aria-pressed={i===index&&!manual} onClick={()=>{setIndex(i);setManual(undefined);}}>{s.proven?`方案 ${i+1}`:`可行方案 ${i+1} · 名次未证`}{s.score!==null?` · ${s.score.toFixed(1)} 分`:""}</button>)}</div>
+          <div className="plan-tabs">{result.solutions.map((s,i)=><button key={i} className="secondary" disabled={busy} aria-pressed={i===index&&!manual} onClick={()=>{setIndex(i);setManual(undefined);}}>{(s.proven||result.status==="browser_complete")?`方案 ${i+1}`:`可行方案 ${i+1} · 名次未证`}{s.score!==null?` · ${s.score.toFixed(1)} 分`:""}</button>)}</div>
         </>}
         {(plan||manual)&&<div className="plan-tabs">
           <button className="secondary" disabled={busy} onClick={()=>{setManual(manual?undefined:(plan?.selections??[]));setManualReport(undefined);}}>{manual?"返回推荐":"手动调班"}</button>
