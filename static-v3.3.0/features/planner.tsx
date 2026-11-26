@@ -156,7 +156,7 @@ export default function Planner() {
   const shown=result?.solutions??progress?.preview??[];
   const plan=shown[Math.min(index,shown.length-1)];
   const report=manual?manualReport:plan?.validation;
-  const searches=courses.filter(c=>`${c.code} ${c.name}`.toLowerCase().includes(query.trim().toLowerCase()));
+  const searches=courses.filter(c=>!codes.includes(c.code)&&`${c.code} ${c.name}`.toLowerCase().includes(query.trim().toLowerCase()));
 
   async function generate(){
     setBusy(true);invalidate();setManual(undefined);
